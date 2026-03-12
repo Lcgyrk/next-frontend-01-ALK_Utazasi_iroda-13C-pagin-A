@@ -1,0 +1,28 @@
+[
+	{
+		"id": 10,
+		"vehicle": {
+		"id": 1,
+		"type": "repülőgép"
+		},
+		"country": "Japán",
+		"description": "Tokió neonfényes utcái, ősi templomok és futurisztikus technológia egyszerre jellemzik Japánt. A látogatók nappal szentélyeket és tradicionális kerteket járnak be, este pedig ramen bárokban és izakaya éttermekben kóstolják a helyi ételeket. A cseresznyevirágzás idején a parkok rózsaszínbe borulnak, ami az egyik legismertebb látvány az országban. A gyors sinkanszen vonatokkal pillanatok alatt elérhetőek a történelmi városok, mint Kiotó vagy Nara.",
+		"departure": "2024-11-18",
+		"capacity": 132,
+		"pictureUrl": "https://nits68.github.io/static/utazasi-iroda/japan.jpg
+		"
+	},
+	{
+		"id": 11,
+		"vehicle": {
+		"id": 1,
+		"type": "repülőgép"
+			},
+		"country": "Izland",
+		"description": "Izland a természet brutális erejét mutatja meg. Vulkanikus tájak, gejzírek, vízesések és fekete homokos strandok váltják egymást. Az Arany Kör útvonalon a turisták egy nap alatt láthatnak aktív gejzíreket, hatalmas vízeséseket és a híres Þingvellir Nemzeti Parkot. Télen az északi fény zöld és lila hullámai táncolnak az égen, nyáron pedig szinte soha nem megy le a nap.",
+		"departure": "2024-11-22",
+		"capacity": 98,
+		"pictureUrl": "https://nits68.github.io/static/utazasi-iroda/iceland.jpg
+		"
+	}
+]
