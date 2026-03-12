@@ -28,11 +28,21 @@ export default function PaginationPage() {
 
   useEffect(() => {
     async function getJourneys() {
+      const filterParam = gs.searchTerm.trim() || "*";
       const res = await axios.get(
-        `http://localhost:3000/api/journeys/${gs.actualPage}/${limit}/${gs.searchTerm || "*"}`,
+        `http://localhost:3000/api/journeys/${gs.actualPage}/${limit}/${encodeURIComponent(filterParam)}`,
       );
       setJourneys(res.data);
-      const totalRecords = Number(res.headers["number-of-records"]);
+
+      // Get total record count from all journeys, then filter locally for counting
+      const allRes = await axios.get("http://localhost:3000/api/journeys");
+      const allData: JourneyItem[] = allRes.data;
+      const totalRecords =
+        filterParam === "*"
+          ? allData.length
+          : allData.filter((j) => j.description.toLowerCase().includes(filterParam.toLowerCase()))
+              .length;
+
       const totalPages = Math.ceil(totalRecords / limit) || 1;
       set("numberOfRecords", totalRecords);
       set("numberOfPages", totalPages);
@@ -52,48 +62,12 @@ export default function PaginationPage() {
             required
             type="search"
             value={gs.searchTerm}
-            onChange={(e) => set("searchTerm", e.target.value)}
+            onChange={(e) => {
+              set("searchTerm", e.target.value);
+              set("actualPage", 1);
+            }}
           />
         </label>
-      </div>
-
-      {/* Pagination buttons with lucide-react icons */}
-      <div className="flex items-center space-x-2">
-        <button
-          className="btn btn-primary"
-          disabled={gs.actualPage === 1}
-          title="Első oldal"
-          onClick={() => set("actualPage", 1)}
-        >
-          <ChevronsLeft />
-        </button>
-        <button
-          className="btn btn-primary"
-          disabled={gs.actualPage === 1}
-          title="Előző oldal"
-          onClick={() => set("actualPage", gs.actualPage - 1)}
-        >
-          <ChevronLeft />
-        </button>
-        <span className="px-2 text-lg font-semibold">
-          {gs.actualPage} / {gs.numberOfPages}
-        </span>
-        <button
-          className="btn btn-primary"
-          disabled={gs.actualPage === gs.numberOfPages}
-          title="Következő oldal"
-          onClick={() => set("actualPage", gs.actualPage + 1)}
-        >
-          <ChevronRight />
-        </button>
-        <button
-          className="btn btn-primary"
-          disabled={gs.actualPage === gs.numberOfPages}
-          title="Utolsó oldal"
-          onClick={() => set("actualPage", gs.numberOfPages)}
-        >
-          <ChevronsRight />
-        </button>
       </div>
 
       {/* Table of journeys */}
@@ -130,6 +104,45 @@ export default function PaginationPage() {
             ))}
           </tbody>
         </table>
+      </div>
+
+      {/* Pagination buttons with lucide-react icons */}
+      <div className="mt-4 flex items-center space-x-2">
+        <button
+          className="btn btn-primary"
+          disabled={gs.actualPage === 1}
+          title="Első oldal"
+          onClick={() => set("actualPage", 1)}
+        >
+          <ChevronsLeft />
+        </button>
+        <button
+          className="btn btn-primary"
+          disabled={gs.actualPage === 1}
+          title="Előző oldal"
+          onClick={() => set("actualPage", gs.actualPage - 1)}
+        >
+          <ChevronLeft />
+        </button>
+        <span className="px-2 text-lg font-semibold">
+          {gs.actualPage} / {gs.numberOfPages}
+        </span>
+        <button
+          className="btn btn-primary"
+          disabled={gs.actualPage === gs.numberOfPages}
+          title="Következő oldal"
+          onClick={() => set("actualPage", gs.actualPage + 1)}
+        >
+          <ChevronRight />
+        </button>
+        <button
+          className="btn btn-primary"
+          disabled={gs.actualPage === gs.numberOfPages}
+          title="Utolsó oldal"
+          onClick={() => set("actualPage", gs.numberOfPages)}
+        >
+          <ChevronsRight />
+        </button>
       </div>
     </div>
   );

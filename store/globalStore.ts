@@ -1,40 +1,32 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 
-type GlobalState = {
-  id: number | null;
-  actualPage: number;
+// Define the shape of the global state
+type GlobalStateData = {
   numberOfRecords: number;
   numberOfPages: number;
+  actualPage: number;
   searchTerm: string;
 };
 
 type GlobalStore = {
-  gs: GlobalState;
-  set: <K extends keyof GlobalState>(key: K, value: GlobalState[K]) => void;
-  setId: (newId: number | null) => void;
+  gs: GlobalStateData;
+  set: <K extends keyof GlobalStateData>(key: K, value: GlobalStateData[K]) => void;
 };
 
-export const useGlobalStore = create<GlobalStore>()(
-  persist(
-    (set) => ({
+export const useGlobalStore = create<GlobalStore>()((set) => ({
+  // Initialize the global state:
+  gs: {
+    numberOfRecords: 0,
+    numberOfPages: 0,
+    actualPage: 1,
+    searchTerm: "",
+  },
+
+  set: (key, value) =>
+    set((state) => ({
       gs: {
-        id: null,
-        actualPage: 1,
-        numberOfRecords: 0,
-        numberOfPages: 1,
-        searchTerm: "",
+        ...state.gs,
+        [key]: value,
       },
-      set: (key, value) =>
-        set((state) => ({
-          gs: { ...state.gs, [key]: value },
-        })),
-      setId: (newId) =>
-        set((state) => ({
-          gs: { ...state.gs, id: newId },
-        })),
-    }),
-    { name: "global-store" },
-  ),
-);
-// persist használata miatt a store állapota megmarad a böngésző újraindításakor is
+    })),
+}));
